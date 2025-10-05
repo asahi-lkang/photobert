@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhotoBert – Products</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      color: #333;
+      opacity: 0; /* start hidden */
+      animation: fadeIn 1s ease forwards; /* fade in effect */
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* --- New Navigation Styles Start --- */
+    nav {
+      background: linear-gradient(90deg, #d3d3d3, #a9a9a9);
+      color: #fff;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    nav h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #222;
+    }
+
+    nav img {
+      height: 45px;
+      border-radius: 50%;
+    }
+
+    .hamburger {
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #222;
+    }
+
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      background-color: #333;
+      overflow-x: hidden;
+      transition: 0.4s;
+      padding-top: 60px;
+      z-index: 2000;
+    }
+
+    .sidebar a {
+      padding: 15px 25px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: #fff;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: #666;
+    }
+
+    .closebtn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #fff;
+    }
+    /* --- New Navigation Styles End --- */
+
+    main {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h2 {
+      color: #ff4081;
+      text-align: center;
+      margin-bottom: 1rem;
+      animation: slideDown 0.8s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .product {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      text-align: center;
+      animation: fadeUp 0.8s ease;
+    }
+
+    .product:nth-child(2) { animation-delay: 0.2s; }
+    .product:nth-child(3) { animation-delay: 0.4s; }
+    .product:nth-child(4) { animation-delay: 0.6s; }
+
+    @keyframes fadeUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .product img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      background: #111;
+      color: white;
+      padding: 1rem;
+      margin-top: 2rem;
+      animation: fadeIn 1.2s ease forwards;
+    }
+
+    footer a {
+      color: #ff4081;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+    
+    /* --- Floating Action Button --- */
+    .fab {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background-color: #ff4081;
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        transition: transform 0.2s ease-in-out;
+        z-index: 1000;
+    }
+
+    .fab:hover {
+        transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1><img src="nigga.png" alt="Logo"> PhotoBert</h1>
+    <span class="hamburger" onclick="openNav()">&#9776;</span>
+  </nav>
+
+  <div id="mySidebar" class="sidebar">
+    <span class="closebtn" onclick="closeNav()">&times;</span>
+    <a href="index.html" onclick="closeNav()">Home</a>
+    <a href="members.html" onclick="closeNav()">Members</a>
+    <a href="products.html" onclick="closeNav()">Products</a>
+    <a href="index.html#about" onclick="closeNav()">About</a>
+  </div>
+
+  <main>
+    <h2>Our Products</h2>
+    <p style="text-align:center; max-width:700px; margin:auto; margin-bottom:2rem;">
+      At <strong>PhotoBert</strong>, we believe in capturing memories and turning them into something special.  
+      Whether you’re with friends or celebrating a milestone, our products are designed to help you keep those  
+      moments forever.
+    </p>
+
+    <div class="product">
+      <img src="example-photo1.jpg" alt="Printed Photo (Placeholder)">
+      <h3>Printed Photos</h3>
+      <p>High-quality prints of your captured moments, perfect for sharing and keeping as souvenirs.  
+      Available in different sizes.</p>
+    </div>
+
+    <div class="product">
+      <img src="example-photo2.jpg" alt="Photo Keychain (Placeholder)">
+      <h3>Photo Keychains</h3>
+      <p>Take your memories anywhere! Your chosen photo can be printed and placed inside a durable, stylish keychain.</p>
+    </div>
+
+    <div class="product">
+      <img src="example-photo3.jpg" alt="Group Shots (Placeholder)">
+      <h3>Group Shots</h3>
+      <p>Gather your friends and strike a pose! Perfect for bonding and keeping fun memories together.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>📍 Find us at the Canteen, in front of the Ice Cream Shop</p>
+    <p>Follow us: <a href="https://www.facebook.com/gian.delacruz.77312">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Gmail:photobert.co@gmail.com</a></p>
+  </footer>
+
+  <a href="testingbooth.html" class="fab" title="Try the Photo Booth">📸</a>
+
+  <script>
+    function openNav() {
+      document.getElementById("mySidebar").style.width = "250px";
+    }
+    function closeNav() {
+      document.getElementById("mySidebar").style.width = "0";
+    }
+  </script>
+</body>
+</html>

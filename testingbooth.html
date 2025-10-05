@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhotoBert - Fun Photobooth</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px;
+            color: #333;
+        }
+        
+        nav {
+          background: linear-gradient(90deg, #d3d3d3, #a9a9a9);
+          color: #fff;
+          padding: 15px 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 1000;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        nav h1 {
+          margin: 0;
+          font-size: 1.6rem;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: #222;
+        }
+
+        nav img {
+          height: 45px;
+          border-radius: 50%;
+        }
+
+        .hamburger {
+          font-size: 1.8rem;
+          cursor: pointer;
+          color: #222;
+        }
+
+        .sidebar {
+          height: 100%;
+          width: 0;
+          position: fixed;
+          top: 0;
+          right: 0;
+          background-color: #333;
+          overflow-x: hidden;
+          transition: 0.4s;
+          padding-top: 60px;
+          z-index: 2000;
+        }
+
+        .sidebar a {
+          padding: 15px 25px;
+          text-decoration: none;
+          font-size: 1.2rem;
+          color: #fff;
+          display: block;
+          transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+          background: #666;
+        }
+
+        .closebtn {
+          position: absolute;
+          top: 10px;
+          right: 20px;
+          font-size: 2rem;
+          cursor: pointer;
+          color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        h1 {
+            color: #ff4081;
+            font-size: 3em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #555;
+            font-size: 1.2em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .camera-section {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .video-container {
+            position: relative;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        #video {
+            width: 100%;
+            height: auto;
+            display: block;
+            transform: scaleX(-1);
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        .filter-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            mix-blend-mode: multiply;
+            opacity: 0.5;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: #ff4081;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 64, 129, 0.6);
+        }
+
+        .btn-secondary {
+            background: #f093fb;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #f5576c;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #4ade80;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #22c55e;
+            transform: translateY(-2px);
+        }
+
+        .sidebar-panels {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .panel h2 {
+            color: #ff4081;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .filter-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .filter-btn:hover {
+            border-color: #ff4081;
+            background: #fff5f8;
+        }
+
+        .filter-btn.active {
+            border-color: #ff4081;
+            background: #ff4081;
+            color: white;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item.selected {
+            border-color: #4ade80;
+            box-shadow: 0 0 15px rgba(74, 222, 128, 0.5);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255,0,0,0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 24px;
+            text-align: center;
+            padding: 0;
+        }
+
+        .selection-badge {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: #4ade80;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .layout-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .layout-btn {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .layout-btn:hover {
+            border-color: #ff4081;
+            background: #fff5f8;
+        }
+
+        .layout-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .layout-icon {
+            font-size: 1.2em;
+        }
+
+        .selection-info {
+            background: #fff0f5;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #d81b60;
+            font-size: 0.9em;
+        }
+
+        .flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .flash.active {
+            animation: flashEffect 0.5s ease-out;
+        }
+
+        @keyframes flashEffect {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .empty-gallery {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #ff4081;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        #collageCanvas {
+            max-width: 100%;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flash" id="flash"></div>
+
+    <nav>
+        <h1><img src="nigga.png" alt="Logo"> PhotoBert</h1>
+        <span class="hamburger" onclick="openNav()">&#9776;</span>
+    </nav>
+    
+    <div id="mySidebar" class="sidebar">
+        <span class="closebtn" onclick="closeNav()">&times;</span>
+        <a href="index.html" onclick="closeNav()">Home</a>
+        <a href="members.html" onclick="closeNav()">Members</a>
+        <a href="products.html" onclick="closeNav()">Products</a>
+        <a href="index.html#about" onclick="closeNav()">About</a>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>📸 PhotoBert</h1>
+            <p class="tagline">Capture Your Best Moments</p>
+        </header>
+
+        <div class="main-content">
+            <div class="camera-section">
+                <div class="video-container">
+                    <video id="video" autoplay playsinline></video>
+                    <div class="filter-overlay" id="filterOverlay"></div>
+                </div>
+                <canvas id="canvas"></canvas>
+                
+                <div class="controls">
+                    <button class="btn-primary" id="captureBtn">📷 Capture Photo</button>
+                    <button class="btn-secondary" id="downloadBtn" style="display:none;">💾 Download Last</button>
+                    <button class="btn-success" id="downloadSelectedBtn" style="display:none;">💾 Download Selected</button>
+                </div>
+            </div>
+
+            <div class="sidebar-panels">
+                <div class="panel">
+                    <h2>🎨 Filters</h2>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="none">Normal</button>
+                        <button class="filter-btn" data-filter="grayscale">B&W</button>
+                        <button class="filter-btn" data-filter="sepia">Sepia</button>
+                        <button class="filter-btn" data-filter="invert">Invert</button>
+                        <button class="filter-btn" data-filter="blur">Blur</button>
+                        <button class="filter-btn" data-filter="brightness">Bright</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>📐 Create Layout</h2>
+                    <div class="selection-info" id="selectionInfo">
+                        Select photos from gallery below
+                    </div>
+                    <div class="layout-buttons">
+                        <button class="layout-btn" id="layoutStyled3" disabled>
+                            <span class="layout-icon">🎨</span>
+                            <span>Styled Strip (3 photos)</span>
+                        </button>
+                        <button class="layout-btn" id="layout2x2" disabled>
+                            <span class="layout-icon">▢</span>
+                            <span>2×2 Grid (4 photos)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>🖼️ Gallery</h2>
+                    <div class="gallery" id="gallery">
+                        <div class="empty-gallery">No photos yet! Start capturing memories! 📸</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="collageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Your Photo Layout</h2>
+                <button class="close-btn" id="closeModal">×</button>
+            </div>
+            <canvas id="collageCanvas"></canvas>
+            <div class="controls">
+                <button class="btn-success" id="downloadCollage">💾 Download Layout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Navigation Functions ---
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+        }
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+        }
+
+        // --- Photo Booth App Logic ---
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const captureBtn = document.getElementById('captureBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const downloadSelectedBtn = document.getElementById('downloadSelectedBtn');
+        const flash = document.getElementById('flash');
+        const filterOverlay = document.getElementById('filterOverlay');
+        const gallery = document.getElementById('gallery');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const selectionInfo = document.getElementById('selectionInfo');
+        const collageModal = document.getElementById('collageModal');
+        const collageCanvas = document.getElementById('collageCanvas');
+        const collageCtx = collageCanvas.getContext('2d');
+
+        let currentFilter = 'none';
+        let photos = [];
+        let lastPhotoUrl = null;
+        let selectedPhotos = [];
+
+        // Request camera access
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'user' },
+                    audio: false 
+                });
+                video.srcObject = stream;
+            } catch (err) {
+                alert('Unable to access camera. Please grant camera permissions.');
+                console.error('Camera error:', err);
+            }
+        }
+
+        // Apply filters
+        function applyFilter(filter) {
+            currentFilter = filter;
+            let filterStyle = '';
+            
+            switch(filter) {
+                case 'grayscale': filterStyle = 'grayscale(100%)'; break;
+                case 'sepia': filterStyle = 'sepia(100%)'; break;
+                case 'invert': filterStyle = 'invert(100%)'; break;
+                case 'blur': filterStyle = 'blur(3px)'; break;
+                case 'brightness': filterStyle = 'brightness(1.5)'; break;
+                default: filterStyle = 'none';
+            }
+            
+            video.style.filter = filterStyle;
+        }
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                applyFilter(btn.dataset.filter);
+            });
+        });
+
+        // Capture photo
+        function capturePhoto() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            ctx.filter = video.style.filter;
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+            ctx.restore();
+            
+            flash.classList.add('active');
+            setTimeout(() => flash.classList.remove('active'), 500);
+            
+            const dataUrl = canvas.toDataURL('image/png');
+            lastPhotoUrl = dataUrl;
+            photos.unshift(dataUrl);
+            
+            updateGallery();
+            downloadBtn.style.display = 'inline-block';
+        }
+
+        function togglePhotoSelection(index) {
+            const photoIndex = selectedPhotos.indexOf(index);
+            if (photoIndex > -1) {
+                selectedPhotos.splice(photoIndex, 1);
+            } else {
+                selectedPhotos.push(index);
+            }
+            updateGallery();
+            updateLayoutButtons();
+        }
+
+        function updateLayoutButtons() {
+            const count = selectedPhotos.length;
+            
+            document.getElementById('layoutStyled3').disabled = count !== 3;
+            document.getElementById('layout2x2').disabled = count !== 4;
+
+            downloadSelectedBtn.style.display = count > 0 ? 'inline-block' : 'none';
+            
+            if (count === 0) {
+                selectionInfo.textContent = 'Select photos from gallery below';
+            } else {
+                selectionInfo.textContent = `${count} photo${count !== 1 ? 's' : ''} selected`;
+            }
+        }
+
+        function updateGallery() {
+            if (photos.length === 0) {
+                gallery.innerHTML = '<div class="empty-gallery">No photos yet! Start capturing memories! 📸</div>';
+                return;
+            }
+            
+            gallery.innerHTML = '';
+            photos.forEach((photo, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                
+                const selectionIndex = selectedPhotos.indexOf(index);
+                if (selectionIndex > -1) {
+                    item.classList.add('selected');
+                    const badge = document.createElement('div');
+                    badge.className = 'selection-badge';
+                    badge.textContent = selectionIndex + 1;
+                    item.appendChild(badge);
+                }
+                
+                const img = document.createElement('img');
+                img.src = photo;
+                img.alt = `Photo ${index + 1}`;
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.innerHTML = '×';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deletePhoto(index);
+                };
+                
+                item.appendChild(img);
+                item.appendChild(deleteBtn);
+                item.onclick = () => togglePhotoSelection(index);
+                gallery.appendChild(item);
+            });
+        }
+
+        function deletePhoto(index) {
+            photos.splice(index, 1);
+            selectedPhotos = selectedPhotos.filter(i => i !== index).map(i => i > index ? i - 1 : i);
+            updateGallery();
+            updateLayoutButtons();
+            if (photos.length === 0) {
+                downloadBtn.style.display = 'none';
+            }
+        }
+
+        function downloadPhoto(dataUrl, filename) {
+            const link = document.createElement('a');
+            link.download = filename || `photobert_${Date.now()}.png`;
+            link.href = dataUrl;
+            link.click();
+        }
+
+        function createCollage(layout) {
+            const selectedImages = selectedPhotos.map(i => photos[i]);
+            
+            if (layout === 'styled3') {
+                createStyled3PhotoStrip(selectedImages);
+            } else if (layout === '2x2') {
+                create2x2Layout(selectedImages);
+            }
+            
+            collageModal.classList.add('active');
+        }
+
+        function loadImage(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+        }
+
+        // --- Helper function to draw styled background ---
+        function drawStyledBackground(width, height) {
+            const ctx = collageCtx;
+            // Draw base background
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, width, height);
+            // Draw dotted pattern
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            for (let x = 15; x < width; x += 30) {
+                for (let y = 15; y < height; y += 30) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        // --- Helper function to draw photo with frame ---
+        async function drawPhotoWithFrame(imageSrc, x, y, width, height) {
+            const ctx = collageCtx;
+            const img = await loadImage(imageSrc);
+            
+            // Draw white frame with shadow
+            ctx.fillStyle = 'white';
+            ctx.shadowColor = 'rgba(0,0,0,0.2)';
+            ctx.shadowBlur = 15;
+            ctx.shadowOffsetX = 5;
+            ctx.shadowOffsetY = 5;
+            ctx.fillRect(x - 10, y - 10, width + 20, height + 20);
+            
+            // Draw photo
+            ctx.shadowColor = 'transparent';
+            ctx.drawImage(img, x, y, width, height);
+        }
+
+        // --- Helper function to draw doodles ---
+        function drawDoodles(canvasWidth, canvasHeight) {
+            const ctx = collageCtx;
+            ctx.strokeStyle = '#222';
+            ctx.lineWidth = 3;
+            
+            // Star in top left
+            ctx.beginPath();
+            ctx.moveTo(30, 40);
+            ctx.lineTo(70, 80);
+            ctx.moveTo(30, 80);
+            ctx.lineTo(70, 40);
+            ctx.moveTo(50, 30);
+            ctx.lineTo(50, 90);
+            ctx.stroke();
+            
+            // Heart on the right (adjusted position based on canvas)
+            const heartY = Math.min(canvasHeight * 0.5, 800);
+            ctx.beginPath();
+            ctx.moveTo(canvasWidth - 70, heartY);
+            ctx.quadraticCurveTo(canvasWidth - 20, heartY + 50, canvasWidth - 70, heartY + 100);
+            ctx.stroke();
+            
+            // Flower (adjusted position)
+            const flowerY = Math.min(canvasHeight * 0.6, 1000);
+            ctx.fillStyle = '#222';
+            ctx.beginPath();
+            ctx.arc(60, flowerY, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(45, flowerY - 15, 10, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(75, flowerY - 15, 10, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(45, flowerY + 15, 10, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(75, flowerY + 15, 10, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Stars/sparkles at bottom (adjusted position)
+            const sparkleY = canvasHeight - 250;
+            ctx.font = '30px sans-serif';
+            ctx.fillText('⭐', canvasWidth - 80, sparkleY);
+            ctx.fillText('✨', canvasWidth - 60, sparkleY + 40);
+        }
+
+        // --- Helper function to draw logo ---
+        async function drawLogo(canvasWidth, canvasHeight) {
+            const ctx = collageCtx;
+            try {
+                const logoImg = await loadImage('kantutan.png');
+                const logoSize = 150;
+                const logoX = (canvasWidth - logoSize) / 2;
+                const logoY = canvasHeight - logoSize - 40;
+                ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
+            } catch (error) {
+                console.error("Could not load the logo image.", error);
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 30px "Segoe UI"';
+                ctx.textAlign = 'center';
+                ctx.fillText('PHOTOBERT', canvasWidth / 2, canvasHeight - 60);
+            }
+        }
+        
+        async function createStyled3PhotoStrip(images) {
+            // --- Configuration ---
+            const canvasWidth = 600;
+            const canvasHeight = 1800;
+            const photoWidth = 500;
+            const photoHeight = 400;
+            const photoGap = 40;
+            const sidePadding = (canvasWidth - photoWidth) / 2;
+            const totalPhotoBlockHeight = (photoHeight * 3) + (photoGap * 2);
+            const topPadding = (canvasHeight - totalPhotoBlockHeight - 200) / 2;
+            
+            collageCanvas.width = canvasWidth;
+            collageCanvas.height = canvasHeight;
+
+            // Draw background
+            drawStyledBackground(canvasWidth, canvasHeight);
+
+            // Draw photos
+            for (let i = 0; i < 3; i++) {
+                const x = sidePadding;
+                const y = topPadding + i * (photoHeight + photoGap);
+                await drawPhotoWithFrame(images[i], x, y, photoWidth, photoHeight);
+            }
+
+            // Draw doodles and logo
+            drawDoodles(canvasWidth, canvasHeight);
+            await drawLogo(canvasWidth, canvasHeight);
+        }
+
+        // --- Styled Layout Functions ---
+        async function create2x2Layout(images) {
+            const photoWidth = 400;
+            const photoHeight = 400;
+            const photoGap = 40;
+            const sidePadding = 100;
+            const canvasWidth = (photoWidth * 2) + photoGap + (sidePadding * 2);
+            const canvasHeight = (photoHeight * 2) + photoGap + 300;
+            
+            collageCanvas.width = canvasWidth;
+            collageCanvas.height = canvasHeight;
+
+            // Draw background
+            drawStyledBackground(canvasWidth, canvasHeight);
+
+            // Draw photos
+            const topPadding = 80;
+            for (let i = 0; i < 4; i++) {
+                const x = sidePadding + (i % 2) * (photoWidth + photoGap);
+                const y = topPadding + Math.floor(i / 2) * (photoHeight + photoGap);
+                await drawPhotoWithFrame(images[i], x, y, photoWidth, photoHeight);
+            }
+
+            // Draw doodles and logo
+            drawDoodles(canvasWidth, canvasHeight);
+            await drawLogo(canvasWidth, canvasHeight);
+        }
+
+        // --- Event listeners ---
+        captureBtn.addEventListener('click', capturePhoto);
+
+        downloadBtn.addEventListener('click', () => {
+            if (lastPhotoUrl) {
+                downloadPhoto(lastPhotoUrl, `photobert_last_${Date.now()}.png`);
+            }
+        });
+
+        downloadSelectedBtn.addEventListener('click', () => {
+            const timestamp = Date.now();
+            selectedPhotos.forEach((photoIndex, i) => {
+                const photoUrl = photos[photoIndex];
+                setTimeout(() => {
+                    downloadPhoto(photoUrl, `photobert_selection_${timestamp}_${i + 1}.png`);
+                }, i * 300);
+            });
+        });
+
+        document.getElementById('layoutStyled3').addEventListener('click', () => createCollage('styled3'));
+        document.getElementById('layout2x2').addEventListener('click', () => createCollage('2x2'));
+
+        document.getElementById('closeModal').addEventListener('click', () => {
+            collageModal.classList.remove('active');
+        });
+
+        document.getElementById('downloadCollage').addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = `photobert_collage_${Date.now()}.png`;
+            link.href = collageCanvas.toDataURL('image/png');
+            link.click();
+        });
+
+        collageModal.addEventListener('click', (e) => {
+            if (e.target === collageModal) {
+                collageModal.classList.remove('active');
+            }
+        });
+
+        initCamera();
+    </script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhotoBert – Members</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f8f9fa;
+      color: #333;
+      opacity: 0; /* Added for fade-in */
+      animation: fadeIn 1s ease forwards; /* Added for fade-in */
+    }
+
+    /* Added for fade-in effect */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* --- Navigation Styles Start --- */
+    nav {
+      background: linear-gradient(90deg, #d3d3d3, #a9a9a9);
+      color: #fff;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    nav h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #222;
+    }
+
+    nav img {
+      height: 45px;
+      border-radius: 50%;
+    }
+
+    .hamburger {
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #222;
+    }
+
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      background-color: #333;
+      overflow-x: hidden;
+      transition: 0.4s;
+      padding-top: 60px;
+      z-index: 2000;
+    }
+
+    .sidebar a {
+      padding: 15px 25px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: #fff;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: #666;
+    }
+
+    .closebtn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #fff;
+    }
+    /* --- Navigation Styles End --- */
+
+    main {
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: #ff5c5c;
+      margin-bottom: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .member {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .member img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      object-fit: cover;
+    }
+
+    .member h3 {
+      margin: 10px 0 5px;
+      color: #333;
+    }
+
+    .member p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 30px;
+      background: #222;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1><img src="nigga.png" alt="Logo"> PhotoBert</h1>
+    <span class="hamburger" onclick="openNav()">&#9776;</span>
+  </nav>
+
+  <div id="mySidebar" class="sidebar">
+    <span class="closebtn" onclick="closeNav()">&times;</span>
+    <a href="index.html" onclick="closeNav()">Home</a>
+    <a href="members.html" onclick="closeNav()">Members</a>
+    <a href="products.html" onclick="closeNav()">Products</a>
+    <a href="index.html#about" onclick="closeNav()">About</a>
+  </div>
+
+  <main>
+    <h2>Meet the PhotoBert Team</h2>
+    <div class="grid">
+      <div class="member">
+        <img src="member1.png" alt="Member Photo">
+        <h3>Vince Capiral </h3>
+        <p>Tago higop ng eat</p>
+      </div>
+      <div class="member">
+        <img src="member2.png" alt="Member Photo">
+        <h3>Denver Renz Balingit</h3>
+        <p>Role / Description</p>
+      </div>
+      <div class="member">
+        <img src="member3.png" alt="Member Photo">
+        <h3>James Lucas Centeno</h3>
+        <p>Role / Description</p>
+      </div>
+      <div class="member">
+        <img src="member4.png" alt="Member Photo">
+        <h3>Gian Andrei Dela Cruz</h3>
+        <p>Role / Description</p>
+      </div>
+      <div class="member">
+        <img src="member5.png" alt="Member Photo">
+        <h3>Ernest Luirace Dimla</h3>
+        <p>Role / Description</p>
+      </div>
+      <div class="member">
+        <img src="member6.png" alt="Member Photo">
+        <h3>Prince Romeo Rebutoc</h3>
+        <p>Role / Description</p>
+      </div>
+      <div class="member">
+        <img src="member7.png" alt="Member Photo">
+        <h3>Milbert Millona</h3>
+        <p>Role / Description</p>
+      </div>
+      <div class="member">
+        <img src="member8.png" alt="Member Photo">
+        <h3>Kirsten Lois Lomboy</h3>
+        <p>Role / Description</p>
+      </div>
+      <div class="member">
+        <img src="member9.png" alt="Member Photo">
+        <h3>Precious Salonga</h3>
+        <p>Role / Description</p>
+      </div>
+      
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Photo Bert | All Rights Reserved</p>
+  </footer>
+
+  <script>
+    function openNav() {
+      document.getElementById("mySidebar").style.width = "250px";
+    }
+    function closeNav() {
+      document.getElementById("mySidebar").style.width = "0";
+    }
+  </script>
+</body>
+</html>
